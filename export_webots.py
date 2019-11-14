@@ -20,6 +20,7 @@ import re
 
 import bpy
 import mathutils
+import math
 
 from bpy_extras.io_utils import create_derived_objects, free_derived_objects
 
@@ -461,6 +462,12 @@ def export(file, global_matrix, scene, use_mesh_modifiers=False, use_selection=T
             obj_type = obj.type
             obj_matrix = obj_main_matrix_world_invert * obj_matrix  # Make transform node relative.
 
+	    
+            #test of new matrix for object
+            MatriceTransformBlenderToWebots = mathutils.Matrix.Rotation(math.radians(90.0), 4, 'X')
+            obj_matrix = MatriceTransformBlenderToWebots * obj_matrix 
+
+
             if obj_type in {'MESH', 'CURVE', 'SURFACE', 'FONT'}:
                 if (obj_type != 'MESH') or (use_mesh_modifiers and obj.is_modified(scene, 'PREVIEW')):
                     me = obj.to_mesh(scene, use_mesh_modifiers, 'PREVIEW')
@@ -505,6 +512,7 @@ def export(file, global_matrix, scene, use_mesh_modifiers=False, use_selection=T
 
     def export_main():
         """Main Export Function."""
+
 
         # tag un-exported IDs
         bpy.data.meshes.tag(False)
